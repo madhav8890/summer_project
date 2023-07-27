@@ -1,0 +1,46 @@
+#!/usr/bin/python3
+
+import os
+while True :
+    
+   a = input("what you want to run command :")
+   print()
+
+   if ("date" in a)and (("run"in a)or("show" in a)or("exiqute" in a)):
+       os.system("date +%x")
+       os.system("date +%x | espeak-ng")
+       print()
+   elif ("ls" in a)or(("show"in a)and("list" in a)):
+       print()
+       ls1=input("Enter the directory name :")
+       os.system("ls {}".format(ls1))
+
+       print()
+   elif ("cal" in a)or((("cal" in a)or("calander" in a))and (("run"in a)or("show" in a)or("exiqute" in a)or("open" in a))):
+       print()
+       cal1=input("enter the day of calender :")
+       cal2=input("which mounth you want to see :")
+       cal3=input("enter the year of caleander :")
+       os.system("cal {} {} {}".format(cal1, cal2, cal3))
+
+       print()
+   elif ("mkdir" in a)or((("mkdir" in a)or("make" in a))and(("dir" in a)or("directory" in a)or ("folder" in  a))):
+       print()
+       dir1=input("Enter yor dir name :/n")
+       os.system("mkdir {}".format(dir1))
+   elif (("rm" in a)or ("remove" in a))and("file " in a):
+       rm1=input("Enter the file name that you want to remove :")
+       os.system("rm -rfv {}".format(rm1))
+       print()
+   
+   elif ("cp" in a)or("copy" in a)and("file" in a):
+       cp1 = input("Enter the file name :")
+       cp2 = input("Enter the folder/dir name :")
+       os.system("cp {} {}".format(cp1 , cp2))
+
+   elif ("ls" in a)or("list" in a)and("show" in a):
+       os.system("ls")
+   elif "exit" in a:
+       print("######################  thanks for using me  ######################")
+       break
+       exit()

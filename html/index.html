@@ -1,0 +1,202 @@
+<html>
+
+<head>
+  <title>docker webapp</title>
+  <link rel="stylesheet" herf="/var/www/html/home.css">
+
+</head>
+
+
+<script>
+  function lw() {
+    var i = document.getElementById("in1").value
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "http://3.108.191.184/cgi-bin/hello.py?x=" + i);
+
+    xhr.send();
+    xhr.onload = function () {
+      var output = xhr.responseText;
+      document.getElementById("d1").innerHTML = output;
+    }
+  }
+</script>
+<script>
+  function lw1() {
+    var a = document.getElementById("section").value
+    var b = document.getElementById("in2").value
+    var xhra = new XMLHttpRequest();
+    xhra.open("GET", "http://3.108.191.184/cgi-bin/run_docker.py?b=" + b + "&a=" + a);
+
+    xhra.send();
+    xhra.onload = function () {
+      var output = xhra.responseText;
+      document.getElementById("d1").innerHTML = output;
+    }
+  }
+</script>
+<script>
+  function lw2() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "http://3.108.191.184/cgi-bin/distroy_docker.py");
+
+    xhr.send();
+    xhr.onload = function () {
+      var output = xhr.responseText;
+      document.getElementById("d1").innerHTML = output;
+    }
+  }
+</script>
+<script>
+  function lw3() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "http://3.108.191.184/cgi-bin/docker_running.py");
+
+    xhr.send();
+    xhr.onload = function () {
+      var output = xhr.responseText;
+      document.getElementById("d1").innerHTML = output;
+    }
+  }
+</script>
+<script>
+  function lw4() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "http://3.108.191.184/cgi-bin/docker_image.py");
+
+    xhr.send();
+    xhr.onload = function () {
+      var output = xhr.responseText;
+      document.getElementById("d1").innerHTML = output;
+    }
+  }
+</script>
+
+
+<script>
+  function lw5() {
+    var stop = document.getElementById("stop").value
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "http://3.108.191.184/cgi-bin/docker_stop.py?stop=" + stop);
+
+    xhr.send();
+    xhr.onload = function () {
+      var output = xhr.responseText;
+      document.getElementById("d1").innerHTML = output;
+    }
+  }
+</script>
+<script>
+  function lw6() {
+    var start = document.getElementById("start").value
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "http://3.108.191.184/cgi-bin/docker_start.py?start=" + start);
+
+    xhr.send();
+    xhr.onload = function () {
+      var output = xhr.responseText;
+      document.getElementById("d1").innerHTML = output;
+    }
+  }
+</script>
+
+<script>
+  function lw7() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "http://3.108.191.184/cgi-bin/docker_all_.py");
+
+    xhr.send();
+    xhr.onload = function () {
+      var output = xhr.responseText;
+      document.getElementById("d1").innerHTML = output;
+    }
+  }
+</script>
+<script>
+  function lw8() {
+    var install = document.getElementById("install").value
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "http://3.108.191.184/cgi-bin/docker_install.py?install=" + install);
+
+    xhr.send();
+    xhr.onload = function () {
+      var output = xhr.responseText;
+      document.getElementById("d1").innerHTML = output;
+    }
+  }
+</script>
+
+<script>
+  function lw9() {
+    var delete1 = document.getElementById("id3").value
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "http://3.108.191.184/cgi-bin/docker_delete.py?imagename=" + delete1);
+
+    xhr.send();
+    xhr.onload = function () {
+      var output = xhr.responseText;
+      document.getElementById("d1").innerHTML = output;
+    }
+  }
+</script>
+
+<body >
+
+
+      <div>
+        
+          <button id="btn1">Run The Contaner</button>
+          <div id="runbox">
+            <select id="section">
+              <option>centos</option>
+              <option>ubuntu:14.04 </option>
+              <option>fedora</option>
+              <option>Arch linux</option>
+              <option>Debain</option>
+             </select>
+
+            <input  id="in2" placeholder="Enter your container name"><br>
+            <button onclick="lw1()"> RUN </button>
+          </div>
+
+          <button id="btn2">Distroy The Contaner</button>
+
+          <div id="d2">
+            <input>
+            <button onclick="lw9()"> delete </button>
+        </div>
+          </script>
+
+          <button onclick="lw2();" id="btn2">Distroy The All Contaner</button>
+
+          <button id="btn3">Execute The Container</button>
+
+          <div id="d3">
+            <input placeholder="enter cntainer name">
+          </div>
+
+          <button onclick="lw3();" id="btn4">Show Running Container </button>
+
+          <button onclick="lw4();" id="btn">Show Docker Images</button>
+
+          <button id="btn5">Stop The Container</button>
+
+          <div id="d5">
+            <input>
+            <button onclick="lw5();">Stop</button>
+          </div>
+       
+          <button id="btn6">start the container</button>
+
+          <div id="d6">
+            <input id="start" placeholder="enter cntainer name">
+            <button onclick="lw6();">Start</button>
+          </div>
+
+          <button id="btn7">Install Container Images</button>
+
+          <div id="d7">
+            <input placeholder="Enter image name:virsion">
+            <button onclick="lw8();">Install</button>
+          </div>
+
+          <button onclick="lw7();" id="btn8">Show All Containers</button>

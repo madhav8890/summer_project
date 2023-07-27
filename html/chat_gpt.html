@@ -1,0 +1,68 @@
+<html>
+
+<head>
+  <title>docker webapp</title>
+  <link rel="stylesheet" herf="/var/www/html/home.css">
+  <style>
+    .container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 30px;
+        margin-top: 120px;
+    }
+    .data{
+        display: flex;
+        gap: 30px;
+    }
+
+    .data input{
+        padding: 15px;
+        border-radius: 7px;
+    }
+
+    .data button{
+        width: 70px;
+        border-radius: 7px;
+    }
+
+    div{
+     line-height: 30px; 
+     font-size: 25px; 
+    }
+  </style>
+</head>
+
+
+
+<script>
+  function lw() {
+    var i = document.getElementById("in1").value
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "http://3.108.191.184/cgi-bin/hello.py?x=" + i, true);
+
+    xhr.send();
+    xhr.onload = function () {
+      var output = xhr.responseText;
+      document.getElementById("d1").innerHTML = output;
+    }
+  }
+</script>
+<body>
+      <div class="container">
+        <h1>Chat Gpt</h1>
+        <div class="data">
+          <input id="in1" type="search" placeholder="Enter your command..." onsearch="	lw()">
+          <button nclick="lw();">GO</button>
+        </div>
+
+        <div>
+        <div id="d1" placeholder="data is coming..."></div>
+        </div>
+    
+		   
+    </div>
+   
+</body>
+</html>

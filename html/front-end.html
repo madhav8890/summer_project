@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GCP Cloud Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+
+        header {
+            background-color: orange;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        nav.navbar {
+            background-color: orange;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+
+        .open-drawer-button {
+            background-color: orange;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+            position: fixed;
+            top: 10px;
+            left: 240px;
+            z-index: 100;
+        }
+
+        /* Style the bottom drawer */
+        .bottom-drawer {
+            background-color: #f2f2f2;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .bottom-drawer.active {
+            transform: translateY(0);
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+
+        .search-box input {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .search-box button {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .login-signup button {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .main-container {
+            display: flex;
+        }
+
+        .sidenav {
+            background-color: #333;
+            color: white;
+            min-width: 200px;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .sidenav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidenav li {
+            padding: 10px 0;
+            cursor: pointer;
+        }
+
+        .sidenav li.active {
+            background-color: orange;
+        }
+
+        main {
+            padding: 20px;
+            flex: 1;
+        }
+
+        .card {
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            padding: 20px;
+            margin: 10px;
+        }
+
+        h2 {
+            color: orange;
+            margin-top: 0;
+        }
+
+        button {
+            background-color: orange;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .details {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .details p {
+            margin: 0;
+        }
+
+        /* Modal styles for Login and Signup */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #f2f2f2;
+            margin: 20% auto;
+            padding: 20px;
+            border-radius: 5px;
+            width: 300px;
+        }
+
+        .close {
+            float: right;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function lw() {
+            var i = document.getElementById("in1").value
+		
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://35.154.81.186/cgi-bin/hello.py?x=" + i, true);
+
+            xhr.send();
+            xhr.onload = function () {
+                var output = xhr.responseText;
+		 
+                document.getElementById("py").innerHTML = output;
+            }
+        }
+        function lw1() {
+            var a = document.getElementById("section").value
+            var b = document.getElementById("in2").value
+            var xhra = new XMLHttpRequest();
+            xhra.open("GET", "http://35.154.81.186/cgi-bin/run_docker.py?b=" + b + "&a=" + a, true);
+
+            xhra.send();
+            xhra.onload = function () {
+                var output = xhra.responseText;
+                document.getElementById("docker").innerHTML = output;
+            }
+        }
+        function lw2() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://35.154.81.186/cgi-bin/distroy_docker.py", true);
+
+            xhr.send();
+            xhr.onload = function () {
+                var output = xhr.responseText;
+                document.getElementById("docker").innerHTML = output;
+            }
+        }
+        function lw3() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://35.154.81.186/cgi-bin/docker_running.py", true);
+
+            xhr.send();
+            xhr.onload = function () {
+                var output = xhr.responseText;
+                document.getElementById("docker__ps").innerHTML = output;
+            }
+        }
+        function lw4() {
+             var xhr = new XMLHttpRequest();
+             xhr.open("GET", "http://35.154.81.186/cgi-bin/docker_image.py", true);
+
+             xhr.send();
+             xhr.onload = function () {
+                 var output = xhr.responseText;
+                document.getElementById("docker_img").innerHTML = output;
+             }
+        }
+
+        function lw5() {
+            var stop = document.getElementById("stop").value
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://35.154.81.186/cgi-bin/docker_stop.py?stop=" + stop, true);
+
+            xhr.send();
+            xhr.onload = function () {
+                var output = xhr.responseText;
+                document.getElementById("docker").innerHTML = output;
+            }
+        }
+
+        function lw6() {
+            var start = document.getElementById("start").value
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://35.154.81.186/cgi-bin/docker_start.py?start=" + start, true);
+
+            xhr.send();
+            xhr.onload = function () {
+                var output = xhr.responseText;
+                document.getElementById("docker").innerHTML = output;
+            }
+        }
+
+        function lw7() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://35.154.81.186/cgi-bin/docker_all_.py", true);
+
+            xhr.send();
+            xhr.onload = function () {
+                var output = xhr.responseText;
+                document.getElementById("docker__all").innerHTML = output;
+            }
+        }
+
+        function lw8() {
+            var install = document.getElementById("install").value
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://35.154.81.186/cgi-bin/docker_install.py?install=" + install, true);
+
+            xhr.send();
+            xhr.onload = function () {
+                var output = xhr.responseText;
+                document.getElementById("ins_docker").innerHTML = output;
+            }
+        }
+
+
+        function lw9() {
+            var delete1 = document.getElementById("id3").value
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://35.154.81.186/cgi-bin/docker_delete.py?imagename=" + delete1, true);
+
+            xhr.send();
+            xhr.onload = function () {
+                var output = xhr.responseText;
+                document.getElementById("del_all_docker_").innerHTML = output;
+            }
+        }
+
+
+	
+        function chat() {
+            var data = document.getElementById("in").value
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://35.154.81.186/cgi-bin/chat-gpt.py?i=" + data);
+
+            xhr.send();
+            xhr.onload = function () {
+                var output = xhr.responseText;
+                document.getElementById("chat_").innerHTML = output;
+            }
+        }
+
+
+
+        function shellinabox() {
+           
+                document.getElementById("iframe").src = "https://65.2.170.122:4200/";
+            }
+            
+        function docker_ps()
+        {
+            showSection('docker_ps_');
+            lw3();
+            
+        }
+
+      function docker_img()
+        {
+            showSection('docker_image');
+            lw4();
+
+        }
+
+	function all_docker()
+        {
+            showSection('docker_all');
+            lw7();
+
+        }
+
+	 function del_all_docker()
+        {
+            showSection('del_all_docker');
+            lw2();
+
+        }
+
+
+
+    </script>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="user-profile">
+            <!-- User profile details (replace with actual user info if available) -->
+            <span>Welcome, Guest!</span>
+            
+        </div>
+
+        <div class="search-box">
+            <input type="text" placeholder="Search...">
+            <button>Search</button>
+        </div>
+
+        <div class="login-signup">
+            <button onclick="showLoginModal()">Login</button>
+            <button onclick="showSignupModal()">Signup</button>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <nav class="sidenav">
+            <ul>
+                <li onclick="showSection('shell')">Shellinabox</li>
+                <li onclick="docker_ps()">Docker Ps</li>
+		<li onclick="docker_img()">Docker Images</li>
+		<li onclick="all_docker()">All Docker</li>
+              	<li onclick="del_all_docker()">Delete All Docker</li>
+		<li onclick="showSection('linux_command')">Run linux Command</li>
+		<li onclick="showSection('stop_docker')">Stop Docker</li>
+		<li onclick="showSection('start_docker')">Start Docker</li>
+		<li onclick="showSection('install_docker')">Install Docker</li>
+		<li onclick="showSection('chat')">Chat Gpt</li>
+		<li onclick="showSection('Saas')">Paas</li>
+
+
+		<!-- Add more services to the navigation as needed -->
+            </ul>
+        </nav>
+
+        <main>
+        
+		 
+	<section class="card" id="chat">
+               <input type="text" id="in" placeholder="Enter a value">
+                <button onclick="chat()">Submit</button>
+		<pre><div id="chat_"></div></pre>
+
+            </section>
+
+
+		<section class="card" id="start_docker">
+               <input type="text" id="start" placeholder="Enter a value">
+                <button onclick="lw6()">Submit</button>
+		<pre><div id="docker"></div></pre>
+
+            </section>
+
+
+		<section class="card" id="stop_docker">
+               <input type="text" id="stop" placeholder="Enter a value">
+                <button onclick="lw5()">Submit</button>
+		<pre><div id="docker"></div></pre>
+
+            </section>
+
+
+	    <section class="card" id="install_docker">
+               <input type="text" id="install" placeholder="Enter a value">
+                <button onclick="lw8()">Submit</button>
+		<pre><div id="ins_docker"></div></pre>
+
+            </section>
+
+
+            <section class="card" id='linux_command'>
+               <input type="text" id="in1" placeholder="Enter a value">
+    		<button onclick="lw()">Submit</button>
+		<pre><div id="py"></div></pre>
+                
+            </section>
+
+
+            <section class="card" id="docker_image">
+
+		<pre><div id="docker_img">
+		 
+		</div></pre>
+            </section>
+
+
+	    <section class="card" id="docker_ps_">
+
+	       <pre> <div id="docker__ps">
+
+		</div></pre>
+            </section>
+
+
+		<section class="card" id="docker_all">
+
+		<pre><div id="docker__all">
+
+		</div></pre>
+            </section>
+
+
+		<section class="card" id="del_all_docker">
+
+		<pre><div id="del_all_docker_">
+
+		</div></pre>
+            </section>
+
+
+            <section class="card" id="shell">
+
+                <iframe id="iframe" width="800" height="600" frameborder="0" src = "https://65.2.170.122:4200/"></iframe>
+             
+            </section>
+
+
+	<section class="card" id="Saas">
+
+                <iframe id="iframe" width="800" height="600" frameborder="0" src = "http://13.233.94.114:4200/"></iframe>
+
+            </section>
+
+
+            <!-- Add more sections/cards for other services as needed -->
+        </main>
+    </div>
+
+    <!-- Button to open the bottom drawer -->
+    <button class="open-drawer-button" onclick="toggleBottomDrawer()">Open Drawer</button>
+
+    <!-- Bottom drawer content -->
+    <div class="bottom-drawer">
+        <!-- Add content for the bottom drawer here -->
+        <iframe src="https://3.108.44.117:4200" width="1400px" height="200" ></iframe>
+        <button onclick="closeBottomDrawer()">Close Drawer</button>
+    </div>
+
+    <!-- Login and Signup modal dialog (hidden by default) -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="hideLoginModal()">&times;</span>
+            <!-- Login form content -->
+            <h2>Login</h2>
+            <form>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="hideSignupModal()">&times;</span>
+            <!-- Signup form content -->
+            <h2>Signup</h2>
+            <form>
+                <label for="fullname">Full Name:</label>
+                <input type="text" id="fullname" name="fullname" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+
+                <button type="submit">Signup</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function showLoginModal() {
+            const loginModal = document.getElementById('loginModal');
+            loginModal.style.display = 'block';
+        }
+
+        function hideLoginModal() {
+            const loginModal = document.getElementById('loginModal');
+            loginModal.style.display = 'none';
+        }
+
+        function showSignupModal() {
+            const signupModal = document.getElementById('signupModal');
+            signupModal.style.display = 'block';
+        }
+
+        function hideSignupModal() {
+            const signupModal = document.getElementById('signupModal');
+            signupModal.style.display = 'none';
+        }
+
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.card');
+            const navigationItems = document.querySelectorAll('.sidenav li');
+
+            sections.forEach(section => {
+                if (section.id === sectionId) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+
+            navigationItems.forEach(item => {
+                if (item.textContent === sectionId) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
+
+        function showDetails(sectionId) {
+            const detailsSection = document.getElementById(sectionId + '-details');
+            if (detailsSection.style.display === 'none') {
+                detailsSection.style.display = 'block';
+            } else {
+                detailsSection.style.display = 'none';
+            }
+        }
+        function toggleBottomDrawer() {
+            const bottomDrawer = document.querySelector('.bottom-drawer');
+            bottomDrawer.classList.toggle('active');
+        }
+
+        function closeBottomDrawer() {
+            const bottomDrawer = document.querySelector('.bottom-drawer');
+            bottomDrawer.classList.remove('active');
+        }
+    </script>
+</body>
+
+</html>
